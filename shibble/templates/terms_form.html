@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+
+{% block title %}
+  {{ title }}
+{% endblock %}
+
+{% block body %}
+  <div id="terms" class="centered_wrapper">
+    <div class="content border_rounded border_shadow">
+      <h1>Terms and Conditions.</h1>
+      <p>
+	In order to use the Research Cloud, Users must abide by the
+	following Terms of Use. By pressing "Agree", you acknowledge
+	these Terms of Use and agree to use the Research Cloud
+	facilities in accordance with this notice.
+      </p>
+
+      {% include 'terms_text.html' %}
+      <div class="button_box">
+	<form id="token" action="" method="POST">
+	  <input id="agree" type="submit" name="agree" value="Agree"/>
+	</form>
+	<a id="disagree" href="https://keystone.rc.nectar.org.au/Shibboleth.sso/Logout?return=http://nectar.org.au/">Disagree</a>
+      </div>
+    </div>
+  </div>
+{% endblock %}

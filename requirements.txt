@@ -1,0 +1,11 @@
+PasteDeploy
+bottle
+bottle-sqlalchemy
+Beaker
+Jinja2
+WebError
+SQLAlchemy
+iso8601
+anyjson
+oslo.config
+python-ldap
