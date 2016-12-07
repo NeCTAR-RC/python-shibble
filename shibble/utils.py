@@ -130,7 +130,7 @@ def create_user(db, shib_attrs, password):
         attrs['cn'] = name
         attrs['uid'] = mail
         attrs['uidNumber'] = str(get_next_uid())
-        attrs['gidNumber'] = int(CONF.ldap.group_id)
+        attrs['gidNumber'] = CONF.ldap.group_id
         attrs['homeDirectory'] = '{}/{}'.format(CONF.ldap.home_dir_path, mail)
         attrs['loginShell'] = '/bin/bash'
         attrs['description'] = name
