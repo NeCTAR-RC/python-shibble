@@ -25,7 +25,6 @@ CONST_STRING = \
 
 
 def create_password():
-    return 'nectar'
     return base64.encodestring(
         sha.sha(str(random.randint(1, 99999999)) +
                 CONST_STRING).hexdigest())[:32]
