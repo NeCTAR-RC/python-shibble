@@ -4,23 +4,23 @@
   {{ title }}
 {% endblock %}
 
-{% block body %}
-  <div id="terms" class="centered_wrapper">
-    <div class="content border_rounded border_shadow">
-      <h1>Terms and Conditions.</h1>
+{% block content %}
+    <div class="container">
+
+      <div class="page-header">
+        <h1>Terms and Conditions.</h1>
+      </div>
       <p>
-	In order to use the Research Cloud, Users must abide by the
-	following Terms of Use. By pressing "Agree", you acknowledge
-	these Terms of Use and agree to use the Research Cloud
-	facilities in accordance with this notice.
+	In order to use this service, users must abide by the following
+        Terms of Use. By pressing "Agree", you acknowledge these Terms of Use
+        and agree to use the service in accordance with this notice.
       </p>
 
       {% include 'terms_text.html' %}
-      <div class="button_box">
+      <div class="text-center">
 	<form id="token" action="" method="POST">
-	  <input id="agree" type="submit" name="agree" value="Agree"/>
+          <button class="btn btn-lg btn-primary" type="submit" id="agree" name="agree" value="Agree"/>I Agree</button>
 	</form>
-	<a id="disagree" href="https://keystone.rc.nectar.org.au/Shibboleth.sso/Logout?return=http://nectar.org.au/">Disagree</a>
       </div>
     </div>
   </div>

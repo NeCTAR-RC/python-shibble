@@ -4,16 +4,16 @@
   {{ title }}
 {% endblock %}
 
-{% block body %}
-  <div id="creating-account" class="centered_wrapper">
-    <div id="message" class="content border_rounded border_shadow">
-      <p>
+{% block content %}
+    <div class="container">
+      <div id="content" class="centered">
         <img src="{{ request.script_name }}static/throbber.gif"></img>
-      </p>
-      <p>
-        Creating account.....
-      </p>
+        <h1>Creating your account...</h1>
+      </div>
     </div>
+{% endblock %}
+
+{% block footer %}
     <script type="text/javascript">
      (function () {
          var count = 0;
@@ -23,7 +23,7 @@
                  window.location = window.location.href;
              }
              if (count > 10) {
-                 $("#message").empty().html("<p>There was a problem creating your account, our system administrators will have been notified of the issue. <br /> Please contact <a href=\"{{support_url}}\">support</a> for further details.</p>");
+                 $("#content").empty().html("<img src='{{ request.script_name }}static/error.png'></img><h1>There was a problem creating your account.</h1><p>Please contact <a href='{{ support_url }}'>support</a> for further details.</p>");
                  clearInterval(intervalID);
              }
              count += 1;

@@ -4,16 +4,22 @@
   {{ title }}
 {% endblock %}
 
-{% block body %}
-<div class="centered_message">
-    <div class="message_box error">
-        <h2>Error</h2>
-        <p>{{ message }}
-        {%if errors %}
-            {% for error in errors %}
-                <br /><b>* {{ error }}</b>
-            {% endfor %}
+{% block content %}
+    <div class="container">
+
+      <div class="page-header">
+        <h1>{{ subject | default('Error') }}</h1>
+      </div>
+
+      <div id="content">
+        <h4>{{ message }}</h4>
+        {% if errors %}
+        <ul>
+          {% for error in errors %}
+          <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
         {% endif %}
+      </div>
     </div>
-</div>
 {% endblock %}
