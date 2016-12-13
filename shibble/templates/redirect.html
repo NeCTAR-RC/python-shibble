@@ -1,52 +1,20 @@
 {% extends "layout.html" %}
-{% block head %}
-<!-- script type="text/javascript" src="{{ request.script_name }}static/encrypt.min.js"></script> -->
-<script type="text/javascript" src="/rstudio/js/encrypt.min.js"></script>
-<script type="text/javascript">
-function doLogIn() {
-   try {
-      var payload = "{{username}}\n{{password}}";
-      var xhr = new XMLHttpRequest();
-      xhr.open("GET", "/rstudio/auth-public-key", true);
-      xhr.onreadystatechange = function() {
-         try {
-            if (xhr.readyState == 4) {
-               if (xhr.status != 200) {
-                  var errorMessage;
-                  if (xhr.status == 0)
-                     errorMessage = "Error: Could not reach server--check your internet connection";
-                  else
-                     errorMessage = "Error: " + xhr.statusText;
-                  alert(errorMessage)      
-               }
-               else {
-                  var response = xhr.responseText;
-                  var chunks = response.split(':', 2);
-                  var exp = chunks[0];
-                  var mod = chunks[1];
-                  var encrypted = encrypt(payload, exp, mod);
-                  document.getElementById('package').value = encrypted;
-                  document.realform.submit();
-               }
-            }
-         } catch (exception) {
-            alert("Error: " + exception);
-         }
-      };
-      xhr.send(null);
-   } catch (exception) {
-      alert("Error: " + exception);
-   }
-}
-</script>
+
+{% block content %}
+    <div class="container">
+      <div id="content" class="centered">
+        <img src="{{ request.script_name }}static/throbber.gif"></img>
+        <h1>Starting R-Studio...</h1>
+      </div>
+    </div>
+    <form name="loginform" method="POST" action="/rstudio/auth-do-sign-in">
+      <input type='hidden' name='username' value='{{ username }}' id='username'/>
+      <input type='hidden' name='password' value='{{ password }}' id='password'/>
+    </form>
 {% endblock %}
 
-{% block body %}
-<body onload="doLogIn();">
-<form action="/rstudio/auth-do-sign-in" name="realform" method="POST">
-   <input type="hidden" name="persist" id="persist" value="1"/>
-   <input type="hidden" name="appUri" value=""/>
-   <input type="hidden" name="clientPath" id="clientPath" value="/rstudio"/>
-   <input id="package" type="hidden" name="v" value=""/>
-</form>
+{% block footer %}
+    <script type="text/javascript">
+      document.loginform.submit();
+    </script>
 {% endblock %}
