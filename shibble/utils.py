@@ -3,6 +3,7 @@ import base64
 import sha
 import random
 import smtplib
+import dbus
 
 from email.mime.text import MIMEText
 
@@ -136,7 +137,6 @@ def create_user(db, shib_attrs, password):
         attrs['gecos'] = name
         attrs['userPassword'] = password
 
-        LOG.warning(attrs)
         ldif = modlist.addModlist(attrs)
 
         try:
@@ -144,12 +144,27 @@ def create_user(db, shib_attrs, password):
             l.add_s(user_dn, ldif)
 
             LOG.info("Unix account created for {}".format(mail))
-            # send_signup_email(name, mail, password)
+
+            create_home_dir(mail)
+
             update_user_state(db, shib_attrs, 'created')
-        #except ldap.LDAPError as e:
-        #    LOG.exception('LDAP account creation failed: {}'.format(e))
         finally:
             l.unbind_s()
+
+
+def create_home_dir(username):
+    bus = dbus.SystemBus()
+    obj = bus.get_object('com.redhat.oddjob_mkhomedir', '/')
+    intf_proxy = dbus.proxies.Interface(obj, 'com.redhat.oddjob_mkhomedir')
+    mkhomedirfor = intf_proxy.get_dbus_method('mkhomedirfor')
+    ret, msg, ign = mkhomedirfor(username)
+
+    return_code = int(ret)
+    status_message = str(msg)
+    if return_code > 0:
+        raise Exception('Failed to create home dir')
+
+    return True
 
 
 def create_db_user(db, shib_attrs):

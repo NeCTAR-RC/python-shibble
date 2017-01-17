@@ -7,3 +7,4 @@ WebError
 SQLAlchemy
 oslo.config
 python-ldap
+dbus-python

@@ -195,13 +195,6 @@ def root(db):
     target = CONFIG['target']
     if 'r' in request.query:
         target = request.query['r']
-
-    if target.startswith('/rstudio'):
-        data = {'username': shib_user.email,
-                'password': shib_user.password,
-                'target': target}
-        return template('rstudio_redirect', **data)
-    else:
         redirect(target)
 
 
