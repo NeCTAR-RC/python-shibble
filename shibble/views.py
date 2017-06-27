@@ -196,6 +196,8 @@ def root(db):
     if 'r' in request.query:
         target = request.query['r']
         redirect(target)
+    else:
+        return template('index')
 
 
 @route('/account_status', method='GET')

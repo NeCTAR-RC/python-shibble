@@ -146,6 +146,7 @@ def create_user(db, shib_attrs, password):
             LOG.info("Unix account created for {}".format(mail))
 
             create_home_dir(mail)
+            create_nextcloud_mount(mail, password)
 
             update_user_state(db, shib_attrs, 'created')
         finally:
@@ -157,12 +158,23 @@ def create_home_dir(username):
     obj = bus.get_object('com.redhat.oddjob_mkhomedir', '/')
     intf_proxy = dbus.proxies.Interface(obj, 'com.redhat.oddjob_mkhomedir')
     mkhomedirfor = intf_proxy.get_dbus_method('mkhomedirfor')
-    ret, msg, ign = mkhomedirfor(username)
+    ret, stdout, stderr = mkhomedirfor(username)
 
-    return_code = int(ret)
-    status_message = str(msg)
-    if return_code > 0:
-        raise Exception('Failed to create home dir')
+    if int(ret) > 0:
+        raise Exception('Failed to create home dir: {0}'.format(str(stderr)))
+
+    return True
+
+
+def create_nextcloud_mount(username, password):
+    bus = dbus.SystemBus()
+    obj = bus.get_object('au.org.nectar.nextcloud_storage', '/')
+    intf_proxy = dbus.proxies.Interface(obj, 'au.org.nectar.nextcloud_storage')
+    mkmount = intf_proxy.get_dbus_method('mknextcloudstorage')
+    ret, stdout, stderr = mkmount(username, password)
+
+    if int(ret) > 0:
+        raise Exception('Failed to create NextCloud mount: {0}'.format(str(stderr)))
 
     return True
 
