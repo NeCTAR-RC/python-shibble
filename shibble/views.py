@@ -175,7 +175,7 @@ def root(db):
         return template('creating_account', **data)
 
     if shib_user.state == 'created':
-        if not utils.user_exists(shib_user.email):
+        if not utils.user_exists(shib_attrs['id']):
             LOG.exception('Incomplete user creation error')
             data = {
                 'title': 'Error',

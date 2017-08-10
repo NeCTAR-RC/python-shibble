@@ -32,13 +32,12 @@ def create_password():
 
 
 def send_signup_email(name, mail, password):
+    # TODO(andy): This should be in an external template
     subject = "Account has been created"
     body = """
 Hi {name},
 
-Your account has been created:
-Username: {mail}
-Password: {password}
+Your account has been created.
 
 Thanks
 """.format(name=name, mail=mail, password=password)
@@ -115,23 +114,24 @@ def user_exists(user):
 
 def create_user(db, shib_attrs, password):
     """Add a new user"""
+    username = shib_attrs['id']
     mail = shib_attrs['mail']
     name = shib_attrs['fullname']
 
-    if user_exists(mail):
+    if user_exists(username):
         LOG.warning('User account already exists in LDAP')
     else:
-        user_dn = "uid={},{}".format(mail, CONF.ldap.user_dn)
+        user_dn = "uid={},{}".format(username, CONF.ldap.user_dn)
 
         # A dict to help build the "body" of the object
         attrs = {}
         attrs['objectclass'] = ['top', 'account', 'posixAccount',
                                 'shadowAccount']
-        attrs['cn'] = name
-        attrs['uid'] = mail
+        attrs['cn'] = username
+        attrs['uid'] = username
         attrs['uidNumber'] = str(get_next_uid())
         attrs['gidNumber'] = CONF.ldap.group_id
-        attrs['homeDirectory'] = '{}/{}'.format(CONF.ldap.home_dir_path, mail)
+        attrs['homeDirectory'] = '{}/{}'.format(CONF.ldap.home_dir_path, username)
         attrs['loginShell'] = '/bin/bash'
         attrs['description'] = name
         attrs['gecos'] = name
@@ -143,10 +143,10 @@ def create_user(db, shib_attrs, password):
             l = get_ldap_connection()
             l.add_s(user_dn, ldif)
 
-            LOG.info("Unix account created for {}".format(mail))
+            LOG.info("Unix account created for {}".format(username))
 
-            create_home_dir(mail)
-            create_nextcloud_mount(mail, password)
+            create_home_dir(username)
+            create_nextcloud_mount(username, password)
 
             update_user_state(db, shib_attrs, 'created')
         finally:
