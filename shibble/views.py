@@ -134,7 +134,7 @@ def root(db):
         session.save()
 
     shib_user = db.query(models.User).filter_by(
-        persistent_id=shib_attrs["id"]).first()
+        user_id=shib_attrs["id"]).first()
     if not shib_user:
         shib_user = utils.create_db_user(db, shib_attrs)
 
@@ -205,7 +205,7 @@ def account_status(db):
     session = request.environ['beaker.session']
     state = None
     shib_user = db.query(models.User).filter_by(
-        persistent_id=session['user_id']).first()
+        user_id=session['user_id']).first()
 
     if shib_user:
         state = shib_user.state

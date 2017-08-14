@@ -13,8 +13,7 @@ LOG = logging.getLogger('shibble.models')
 class User(Base):
     __tablename__ = 'user'
     id = Column(Integer, primary_key=True)
-    persistent_id = Column(String(250), unique=True)
-    user_id = Column(String(64))
+    user_id = Column(String(64), unique=True)
     displayname = Column(String(250))
     email = Column(String(250))
     password = Column(String(32))
@@ -22,8 +21,8 @@ class User(Base):
     terms = Column(DateTime())
     shibboleth_attributes = Column(PickleType)
 
-    def __init__(self, persistent_id):
-        self.persistent_id = persistent_id
+    def __init__(self, user_id):
+        self.user_id = user_id
         self.state = "new"
 
     def __repr__(self):
@@ -56,6 +55,6 @@ def update_shibboleth_user(db, shib_user, shib_attrs):
 
 def update_user_state(db, shib_attrs, state):
     shib_user = db.query(User).filter_by(
-        persistent_id=shib_attrs["id"]).first()
+        user_id=shib_attrs["id"]).first()
     shib_user.state = state
     db.commit()

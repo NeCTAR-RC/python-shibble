@@ -203,7 +203,7 @@ def update_db_user(db, shib_user, shib_attrs):
 
 def update_user_state(db, shib_attrs, state):
     shib_user = db.query(User).filter_by(
-        persistent_id=shib_attrs["id"]).first()
+        user_id=shib_attrs["id"]).first()
     shib_user.state = state
     db.commit()
 
